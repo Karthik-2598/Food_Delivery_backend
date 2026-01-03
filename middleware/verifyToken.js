@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
-  const token = req.cookies.token; // Get from cookie
+
+  let token = req.headers.authorization?.split(' ')[1];
+  if(!token) token = req.cookies.token; // Get from cookie
   console.log('Token from cookie:', token ? 'Present': 'Missing');
   if (!token) return res.status(401).json({ error: 'No token provided' });
   try {
