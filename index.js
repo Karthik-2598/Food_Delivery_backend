@@ -16,9 +16,13 @@ const helmet = require('helmet');
 const app = express();
 app.use(helmet());
 const server = http.createServer(app);
+const allowedOrigins = [
+  'http://localhost:5173', // Local dev
+  'https://karthik-2598.github.io' // ← Correct base domain (no path!)
+];
 const io = new Server(server, {
   cors:{
-    origin: 'https://karthik-2598.github.io/Food_Delivery',
+    origin: allowedOrigins,
     methods:['GET','POST', 'PUT','DELETE'],
     credentials: true, //allow cookies
   }
@@ -26,7 +30,13 @@ const io = new Server(server, {
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
-origin: process.env.CLIENT_URL || 'http://localhost:5173',
+origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods:['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders:['Content-Type', 'Authorization'],
