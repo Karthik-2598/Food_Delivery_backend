@@ -55,11 +55,24 @@ router.post('/login',async(req,res)=>{
 });
 
 router.get('/verify', (req,res)=>{
-    const token = req.cookies.token;
-    console.log('Verify token: ', token);
-    if(!token){
-        return res.status(401).json({error: 'No token provided'});
-    }
+    let token;
+   // 1. Check Authorization header first
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+    token = req.headers.authorization.split(' ')[1];
+    console.log("Verfied token:", token);
+  }
+  
+
+  // 2. Fallback to cookie
+  if (!token) {
+    token = req.cookies.token;
+  }
+
+  console.log('Verify token:', token ? 'Present' : 'Missing');
+
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
     try{
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
         console.log('Decoded token valid until:', new Date(decoded.exp * 1000));
