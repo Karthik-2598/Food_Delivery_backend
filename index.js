@@ -18,7 +18,7 @@ app.use(helmet());
 const server = http.createServer(app);
 const io = new Server(server, {
   cors:{
-    origin: 'http://localhost:5173', //allow all origins from development
+    origin: 'https://karthik-2598.github.io/Food_Delivery/',
     methods:['GET','POST', 'PUT','DELETE'],
     credentials: true, //allow cookies
   }
