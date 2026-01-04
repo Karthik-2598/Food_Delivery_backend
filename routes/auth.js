@@ -61,15 +61,11 @@ router.get('/verify', (req,res)=>{
     token = req.headers.authorization.split(' ')[1];
     console.log("Verfied token:", token);
   }
-  
-
   // 2. Fallback to cookie
-  if (!token) {
-    token = req.cookies.token;
-  }
-
-  console.log('Verify token:', token ? 'Present' : 'Missing');
-
+//   if (!token) {
+//     token = req.cookies.token;
+//   }
+//   console.log('Verify token:', token ? 'Present' : 'Missing');
   if (!token) {
     return res.status(401).json({ error: 'No token provided' });
   }
